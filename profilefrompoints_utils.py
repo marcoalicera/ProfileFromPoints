@@ -114,7 +114,7 @@ def getFieldNames(layer, fieldTypes):
     for field in fields:
         if field.type() in fieldTypes and not field.name() in fieldNames:
             fieldNames.append(unicode(field.name()))
-    return sorted(fieldNames, cmp=locale.strcoll)
+    return fieldNames
 
 
 def getFieldType(layer, fieldName):

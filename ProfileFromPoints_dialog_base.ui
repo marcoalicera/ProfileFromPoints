@@ -217,6 +217,20 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="uPointID"/>
         </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>No Data Value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="lineEditNoData">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="5" column="1">
@@ -258,6 +272,19 @@
      <property name="sizeConstraint">
       <enum>QLayout::SetNoConstraint</enum>
      </property>
+     <item row="1" column="0">
+      <widget class="QWidget" name="toolbarWidget" native="true"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QWidget" name="canvasWidget" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

@@ -29,24 +29,17 @@ from shapely.geometry import Point
 from shapely.geometry import LineString
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QDialogButtonBox, QApplication, QDialog, QFileDialog, QMessageBox
+from PyQt4.QtGui import QApplication, QMessageBox
 from PyQt4.QtCore import QVariant, Qt
 import processing
-#from PyQt4.QtGui import QColor, QDialog, QMessageBox, QFileDialog
-#from PyQt4.QtCore import Qt, SIGNAL, QObject
-#from qgis.gui import QgsRubberBand
-from qgis.core import QGis, QgsPoint, QgsVectorLayer, QgsFeature, QgsGeometry, QgsMapLayerRegistry
+
+from qgis.core import QgsVectorLayer, QgsFeature, QgsGeometry, QgsMapLayerRegistry
 #
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 from matplotlib.figure import Figure
 from matplotlib.ticker import ScalarFormatter
-#
-#import FlowEstimator_utils as utils
-#from openChannel import flowEstimator
-#from ptmaptool import ProfiletoolMapTool
-#
-#from shapely.geometry import LineString
-#import numpy as np
+
 import profilefrompoints_utils as utils
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -69,10 +62,15 @@ class ProfileFromPointsDialog(QtGui.QDialog, FORM_CLASS):
         self.axes = self.figure.add_subplot(111)
 #        self.figure.subplots_adjust(left=.1, bottom=0.15, right=.78, top=.9, wspace=None)
         self.mplCanvas = FigureCanvas(self.figure)
+        
+        self.mpltoolbar = NavigationToolbar(self.mplCanvas, self.toolbarWidget)
+        lstActions = self.mpltoolbar.actions()
+        self.mpltoolbar.removeAction(lstActions[7])
         self.layoutPlot.addWidget(self.mplCanvas)
-#        self.layoutPlot.addWidget(self.mpltoolbar)
-        self.layoutPlot.minimumSize() 
+        self.layoutPlot.addWidget(self.mpltoolbar)
         self.figure.patch.set_visible(False)
+        self.layoutPlot.minimumSize() 
+
         
         
         ##connections      
@@ -219,6 +217,12 @@ class ProfileFromPointsDialog(QtGui.QDialog, FORM_CLASS):
 
         zField = self.uZfield.currentText()
         pointIdField = self.uPointID.currentText()
+        try:
+            noData = float(self.lineEditNoData.text())
+        except:
+            QMessageBox.warning(self,'Error',
+                                'No data value must be numeric')
+            return
         if self.uBuffer.displayText() !='':
             buff=float(self.uBuffer.displayText())
         else:
@@ -288,9 +292,11 @@ class ProfileFromPointsDialog(QtGui.QDialog, FORM_CLASS):
         distList = []
         pointIdList = []
         for i in pointList:
-            distList.append(i[0])
-            zList.append(i[1])
-            pointIdList.append(i[2])
+            ## only keep data that is not flaged as noData
+            if i[1]!=noData:
+                distList.append(i[0])
+                zList.append(i[1])
+                pointIdList.append(i[2])
         self.values = [distList, zList, pointIdList]
         self.refreshPlot()
         self.uCopytoClip.setEnabled(True)
