@@ -10,7 +10,7 @@
 name=ProfileFromPoints
 qgisMinimumVersion=2.0
 description=Plots profile or cross section of survey points
-version=1.1
+version=1.2
 author=North Dakota State Water Commission
 email=mweier@nd.gov
 
@@ -24,6 +24,7 @@ repository=https://github.com/msweier/ProfileFromPoints
 
 # Uncomment the following line and add your changelog:
 changelog=
+	1.2 added option to label plot w/ point ID (from jorgealmerio), added option to copy just station and elevation w/o header for pasting into HEC-RAS
     1.1 removed sort on field list, added a no data field to ignore invalid points, reinstated the plotting toolbar
     1.0 Much faster!!!, fixed many bugs, no longer requires spatialite
 

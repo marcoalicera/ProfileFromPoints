@@ -123,7 +123,11 @@ class ProfileFromPointsDialog(QtGui.QDialog, FORM_CLASS):
             return
         else:
             clipboard = QApplication.clipboard()
-            clipboard.setText('distance\televation\tpointID\n'+'\n'.join('%s\t%s\t%s' % x for x in zip(self.values[0],self.values[1],self.values[2])))
+            if self.uNoHeader.isChecked():
+                clipboard.setText('\n'.join('%s\t%s' % x for x in zip(self.values[0],self.values[1])))
+            else:
+                clipboard.setText('distance\televation\tpointID\n'+'\n'.join('%s\t%s\t%s' % x for x in zip(self.values[0],self.values[1],self.values[2])))
+            
 
     def restoreGui(self):
         self.buttonBox.rejected.connect(self.reject)
@@ -139,6 +143,16 @@ class ProfileFromPointsDialog(QtGui.QDialog, FORM_CLASS):
             return
 
         self.axes.plot(np.array(self.values[0]),np.array(self.values[1]))
+        
+        ###to draw labels from jorgealmerio 
+        if self.uPointIDlabels.isChecked():
+            for i,linha in enumerate(np.array(self.values[2])):
+                id=self.values[2][i]
+                dist=self.values[0][i]
+                z=self.values[1][i]
+                self.axes.annotate(id,(dist,z))
+
+
         self.axes.grid()
         formatter = ScalarFormatter(useOffset=False)
         self.axes.yaxis.set_major_formatter(formatter)
